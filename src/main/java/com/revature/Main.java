@@ -8,12 +8,12 @@ public class Main {
 
 	public static void main(String[] args) {
 		
-		Javalin app = Javalin.create().start(7500);
+		Javalin app = Javalin.create().start();
 		
 		RequestMapper requestMapper = new RequestMapper();
 		
 		requestMapper.configureRoutes(app);
-
+		
 	}
 
 }
