@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class ConnectionFactory {
 	
-	//TODO change to env variables in ec2
+	//TODO change to get env variables in ec2
 	private static final String URL = System.getenv("db_url");
 	private static final String USERNAME = System.getenv("db_username");
 	private static final String PASSWORD = System.getenv("db_password");
