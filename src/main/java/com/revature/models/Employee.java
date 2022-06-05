@@ -3,10 +3,10 @@ package com.revature.models;
 import java.util.Objects;
 
 public class Employee {
-	private int id;
-	private String firstName;
-	private String lastName;
-	private boolean financeManager;
+	private final int id;
+	private final String firstName;
+	private final String lastName;
+	private final boolean financeManager;
 	
 	public Employee(int id, String firstName, String lastName, boolean financeManager) {
 		this.id = id;
@@ -18,27 +18,19 @@ public class Employee {
 	public int getId() {
 		return id;
 	}
-	public void setId(int id) {
-		this.id = id;
-	}
+
 	public String getFirstName() {
 		return firstName;
 	}
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+
 	public String getLastName() {
 		return lastName;
 	}
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+
 	public boolean isFinanceManager() {
 		return financeManager;
 	}
-	public void setFinanceManager(boolean financeManager) {
-		this.financeManager = financeManager;
-	}
+
 
 	@Override
 	public int hashCode() {
