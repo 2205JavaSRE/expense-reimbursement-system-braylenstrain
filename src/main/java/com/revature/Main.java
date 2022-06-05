@@ -8,7 +8,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		
-		Javalin app = Javalin.create().start();
+		Javalin app = Javalin.create().start(2237);
 		
 		RequestMapper requestMapper = new RequestMapper();
 		
