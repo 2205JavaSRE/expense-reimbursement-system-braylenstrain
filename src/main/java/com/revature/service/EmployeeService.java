@@ -1,9 +1,15 @@
 package com.revature.service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.SQLException;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.revature.dao.EmployeeDao;
+import com.revature.dao.ReimbursementsLogDao;
 import com.revature.models.Employee;
+import com.revature.models.ReimbursementRequest;
 
 public class EmployeeService {
 	
@@ -12,7 +18,7 @@ public class EmployeeService {
 	private EmployeeService() {}
 	
 	public static Employee getEmployeeFromDB(String username, String password) {
-		employee = null;
+		employee = null; //If someone trys to log in while someone else is logged in, this will erase(effictively log out) the current user
 		
 		try {
 			employee = EmployeeDao.selectEmployeeByUserPass(username, password);
@@ -21,6 +27,26 @@ public class EmployeeService {
 		}
 		
 		return employee;
+	}
+	
+	public static void submitRequest(ReimbursementRequest r) throws SQLException, InvalidFormatException, JsonParseException {
+		String details = "Submitted request";
+		ReimbursementsLogDao.insertLog(r, details);
+	}
+
+	//Insures correct decimal format was inputted my employee for their amount double. Rounds down because it's assuming employee accidentally put in an extra digit after the 2nd decimal place.
+	public static double correctAmountFormat(ReimbursementRequest r) {
+		return BigDecimal.valueOf(r.getAmount()).setScale(2, RoundingMode.DOWN).doubleValue();
+	}
+
+	public static String displayPendingRequests() {
+		String s = "ERROR";
+		try {
+			s = ReimbursementsLogDao.selectPendingRequests().toString();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return s;
 	}
 	
 }
