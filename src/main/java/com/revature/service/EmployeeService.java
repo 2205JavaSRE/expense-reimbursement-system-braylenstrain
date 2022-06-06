@@ -8,8 +8,10 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.revature.dao.EmployeeDao;
 import com.revature.dao.ReimbursementsLogDao;
+import com.revature.enums.ReimbursementStatus;
 import com.revature.models.Employee;
 import com.revature.models.ReimbursementRequest;
+import com.revature.util.StatusAlreadyUpdatedException;
 
 public class EmployeeService {
 	
@@ -22,7 +24,7 @@ public class EmployeeService {
 		
 		try {
 			employee = EmployeeDao.selectEmployeeByUserPass(username, password);
-		} catch (SQLException e) {
+		} catch (SQLException ex) {
 			System.out.println("Username/password did not match employee in DB.");
 		}
 		
@@ -43,6 +45,37 @@ public class EmployeeService {
 		String s = "ERROR";
 		try {
 			s = ReimbursementsLogDao.selectPendingRequests().toString();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		return s;
+	}
+
+	public static void approveOrDenyRequest(int id, ReimbursementStatus status) throws SQLException, StatusAlreadyUpdatedException {
+		ReimbursementRequest r = ReimbursementsLogDao.selectLogById(id);
+		if (r.getStatus() == ReimbursementStatus.PENDING) {
+			ReimbursementsLogDao.updateReimbursementStatus(id, status);
+			ReimbursementRequest newR = new ReimbursementRequest(id, employee, r.getTimestamp(), r.getCategory(), status, r.getAmount());
+			ReimbursementsLogDao.insertLog(newR, newR.getDetails());
+		} else {
+			throw new StatusAlreadyUpdatedException("That request has already been approved/denied.");
+		}
+	}
+
+	public static String viewAllHistory() {
+		String s = "";
+		try {
+			s = ReimbursementsLogDao.selectAllLogs().toString();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return s;
+	}
+	
+	public static String viewEmployeeHistory(int id) {
+		String s = "";
+		try {
+			s = ReimbursementsLogDao.selectLogsByEmployee(id).toString();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
