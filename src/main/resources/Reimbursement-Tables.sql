@@ -17,6 +17,6 @@ CREATE TABLE reimbursements_log(
 	employee_first_name text NOT NULL,
 	employee_last_name text NOT NULL,
 	reimbursement_category category NOT NULL,
-	amount NUMERIC NOT NULL CHECK(amount > 0),
+	amount numeric NOT NULL CHECK(amount > 0),
 	reimbursement_status status NOT NULL
 );
