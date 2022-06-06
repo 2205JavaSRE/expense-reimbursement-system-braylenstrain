@@ -24,12 +24,8 @@ public class RequestMapper {
 		
 		app.post("/reimbursements/pending", EmployeeController::approveOrDenyRequest);
 		
-		app.get("/reimbursements/history", ctx -> {
-			//TODO Non finance managers will get redirected with their own id
-		});
+		app.get("/history", EmployeeController::viewAllHistory);
 		
-		app.get("/reimbursements/history/{id}", ctx -> {
-			//TODO if nfm, id must match current employee's id
-		});
+		app.get("/history/{id}", EmployeeController::viewEmployeeHistory);
 	}
 }
