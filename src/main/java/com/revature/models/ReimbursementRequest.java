@@ -18,6 +18,16 @@ public class ReimbursementRequest {
 	private final double amount;
 	private String details;
 
+//	//Constructor for pulling a log just to confirm the id and status before updating
+//	public ReimbursementRequest(int id, ReimbursementStatus status) {
+//		this.id = id;
+//		this.status = status;
+//		this.employee = null;
+//		this.timestamp = null;
+//		this.category = null;
+//		this.amount = 0;
+//	}
+
 	@JsonCreator
 	//Constructor for when an employee makes a request
 	public ReimbursementRequest(@JsonProperty("category") ReimbursementCategory category,
@@ -32,14 +42,16 @@ public class ReimbursementRequest {
 
 	//Constructor for when finance manager approves/denies a request
 	public ReimbursementRequest(int id, Employee employee, Timestamp timestamp, ReimbursementCategory category,
-			ReimbursementStatus status, double amount, String details) {
+			ReimbursementStatus status, double amount) {
 		this.id = id;
 		this.employee = employee;
 		this.timestamp = timestamp;
 		this.category = category;
 		this.status = status;
 		this.amount = amount;
-		this.details = details;
+		this.details = "Request ID " + id + ", submitted " + timestamp +
+				", has been " + status +
+				" by >>>";
 	}
 
 	public int getId() {
