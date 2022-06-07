@@ -14,6 +14,10 @@ public class RequestMapper {
 			}
 		});
 		
+		app.get("/login", ctx -> {
+			ctx.result("You need to log in before viewing any other pages.");
+		});
+		
 		app.post("/login", EmployeeController::authenticateEmployee);
 		
 		app.get("/logout", EmployeeController::logout);

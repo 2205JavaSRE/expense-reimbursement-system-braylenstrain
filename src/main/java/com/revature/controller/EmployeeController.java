@@ -40,7 +40,7 @@ public class EmployeeController {
 	public static void checkForSession(Context ctx) {
 		Employee e = ctx.sessionAttribute("employee");
 		if (e == null || EmployeeService.employee == null) {
-			ctx.redirect("/login", 401); //Unauthorized
+			ctx.redirect("/login", 303); //See Other
 		}
 	}
 	
@@ -107,7 +107,7 @@ public class EmployeeController {
 			ctx.result(EmployeeService.viewAllHistory());
 		} else {
 			int id = EmployeeService.employee.getId();
-			ctx.redirect("/history/" + id, 307); //Temporary Redirect
+			ctx.redirect("/history/" + id, 302); //Found
 		}
 	}
 	
