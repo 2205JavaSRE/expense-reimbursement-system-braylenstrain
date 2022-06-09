@@ -1,0 +1,21 @@
+services:
+  app:
+    image: 'ers-api'
+    container_name: ers-api
+    ports:
+      - 2237:2237
+    environment:
+      - db_url=jdbc:postgresql://project-1.cxrcwnsqehjz.us-west-1.rds.amazonaws.com:5432/postgres
+      - db_username=postgres
+      - db_password=p45sw0rd
+  prom:
+    image: 'prom/prometheus'
+    container_name: prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+  graf:
+    image: 'grafana/grafana'
+    ports:
+      - 3000:3001
