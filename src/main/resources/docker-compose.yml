@@ -7,7 +7,7 @@ services:
     environment:
       - db_url=jdbc:postgresql://project-1.cxrcwnsqehjz.us-west-1.rds.amazonaws.com:5432/postgres
       - db_username=postgres
-      - db_password=p45sw0rd
+      - db_password=***************
   prom:
     image: 'prom/prometheus'
     container_name: prometheus
@@ -18,4 +18,4 @@ services:
   graf:
     image: 'grafana/grafana'
     ports:
-      - 3000:3001
+      - 3000:3000
