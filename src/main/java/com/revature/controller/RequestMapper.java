@@ -9,7 +9,7 @@ public class RequestMapper {
 		
 		//Check for session id 
 		app.before(ctx -> {
-			if (!ctx.path().equals("/login")) {
+			if (!ctx.path().equals("/login") && !ctx.path().equals("/metrics")) {
 				EmployeeController.checkForSession(ctx);
 			}
 		});

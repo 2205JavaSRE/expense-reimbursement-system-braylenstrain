@@ -38,6 +38,10 @@ public class Main {
 		
 		RequestMapper requestMapper = new RequestMapper();
 		
+		app.get("/metrics", ctx -> {
+			ctx.result(registry.scrape());
+		});
+		
 		requestMapper.configureRoutes(app);
 		
 	}
