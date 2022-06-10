@@ -26,4 +26,18 @@ public class EmployeeDao {
 		}
 	}
 	
+	public static Employee selectEmployeeById(int id) throws SQLException {
+		String sqlSelect = "SELECT * FROM employees WHERE id = ?";
+		
+		try (PreparedStatement ps = ConnectionFactory.getConnection().prepareStatement(sqlSelect)) {
+			ps.setInt(1, id);
+			
+			//Put results  into ResultSet and grab first/only result
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+		
+			return new Employee(rs.getInt("id"), rs.getString("first_name"), rs.getString("last_name"), rs.getBoolean("finance_manager"));
+		}
+	}
+	
 }

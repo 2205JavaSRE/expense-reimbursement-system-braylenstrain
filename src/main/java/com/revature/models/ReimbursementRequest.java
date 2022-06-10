@@ -50,8 +50,18 @@ public class ReimbursementRequest {
 		this.status = status;
 		this.amount = amount;
 		this.details = "Request ID " + id + ", submitted " + timestamp +
-				", has been " + status +
-				" by >>>";
+				", was " + status;
+	}
+	
+	//Constructor to view pending/history
+	public ReimbursementRequest(int id, Employee employee, Timestamp timestamp, ReimbursementCategory category, ReimbursementStatus status, double amount, String details) {
+		this.id = id;
+		this.employee = employee;
+		this.timestamp = timestamp;
+		this.category = category;
+		this.status = status;
+		this.amount = amount;
+		this.details = details;
 	}
 
 	public int getId() {

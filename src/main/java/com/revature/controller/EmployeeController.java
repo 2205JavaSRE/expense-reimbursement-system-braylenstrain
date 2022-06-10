@@ -1,6 +1,7 @@
 package com.revature.controller;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
@@ -64,7 +65,7 @@ public class EmployeeController {
 
 	public static void pendingRequests(Context ctx) {
 		if(EmployeeService.employee.isFinanceManager())
-			ctx.result(EmployeeService.displayPendingRequests());
+			ctx.json(EmployeeService.displayPendingRequests());
 		else {
 			ctx.result("You are not allowed to view this page. Finance Manager access only.");
 			ctx.status(HttpCode.FORBIDDEN);
@@ -104,7 +105,7 @@ public class EmployeeController {
 	
 	public static void viewAllHistory(Context ctx) {
 		if (EmployeeService.employee.isFinanceManager()) {
-			ctx.result(EmployeeService.viewAllHistory());
+			ctx.json(EmployeeService.viewAllHistory());
 		} else {
 			int id = EmployeeService.employee.getId();
 			ctx.redirect("/history/" + id, 302); //Found
@@ -119,11 +120,11 @@ public class EmployeeController {
 						+ "Please change URL to /history or /history/{yourownidnumber}");
 				ctx.status(HttpCode.FORBIDDEN);
 			} else {
-				String s = EmployeeService.viewEmployeeHistory(id);
-				if (s.length() == 0) {
+				List<ReimbursementRequest> r = EmployeeService.viewEmployeeHistory(id);
+				if (r.size() == 0) {
 					ctx.result("No logs found for employee ID " + id + ".");
 				} else {
-					ctx.result(s);
+					ctx.json(r);
 				}
 			}
 		} catch (NumberFormatException ex) {

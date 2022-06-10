@@ -3,6 +3,8 @@ package com.revature.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.revature.enums.ReimbursementCategory;
 import com.revature.enums.ReimbursementStatus;
@@ -42,21 +44,59 @@ public class ReimbursementsLogDao {
 		}
 	}
 	
-	public static StringBuilder selectAllLogs() throws SQLException {
-		StringBuilder allLogs = new StringBuilder();
+	//Return StringBuilder
+//	public static StringBuilder selectAllLogs() throws SQLException {
+//		StringBuilder allLogs = new StringBuilder();
+//		String sqlSelect = "SELECT * FROM reimbursements_log ORDER BY id";
+//		
+//		try (PreparedStatement ps = ConnectionFactory.getConnection().prepareStatement(sqlSelect)) {
+//			ResultSet rs = ps.executeQuery();
+//			while(rs.next()) {
+//				allLogs.append(String.format("%s | %s | %s | %s %s %s | %s $%.2f %s%n", rs.getInt(1), rs.getTimestamp(2), rs.getString(3), rs.getInt(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getDouble(8), rs.getString(9)));
+//			}
+//		}
+//		return allLogs;
+//	}
+	
+	public static List<ReimbursementRequest> selectAllLogs() throws SQLException {
+		List<ReimbursementRequest> allLogs = new ArrayList<>();
 		String sqlSelect = "SELECT * FROM reimbursements_log ORDER BY id";
 		
 		try (PreparedStatement ps = ConnectionFactory.getConnection().prepareStatement(sqlSelect)) {
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()) {
-				allLogs.append(String.format("%s | %s | %s | %s %s %s | %s $%.2f %s%n", rs.getInt(1), rs.getTimestamp(2), rs.getString(3), rs.getInt(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getDouble(8), rs.getString(9)));
+				allLogs.add(new ReimbursementRequest(rs.getInt("id"),
+						EmployeeDao.selectEmployeeById(rs.getInt("employee_id")),
+						rs.getTimestamp("time_of_action"),
+						ReimbursementCategory.valueOf(rs.getString("reimbursement_category")),
+						ReimbursementStatus.valueOf(rs.getString("reimbursement_status")),
+						rs.getDouble("amount"), rs.getString("action_details")));
 			}
 		}
 		return allLogs;
 	}
 	
-	public static StringBuilder selectLogsByEmployee(int employeeID) throws SQLException {
-		StringBuilder logsByEmployee = new StringBuilder();
+	//Return StringBuilder
+//	public static StringBuilder selectLogsByEmployee(int employeeID) throws SQLException {
+//		StringBuilder logsByEmployee = new StringBuilder();
+//		
+//		String sqlSelect = "SELECT * FROM reimbursements_log WHERE employee_id = ? ORDER BY id";
+//		
+//		try (PreparedStatement ps = ConnectionFactory.getConnection().prepareStatement(sqlSelect)) {
+//			ps.setInt(1, employeeID);
+//			
+//			//Put results  into ResultSet and grab first/only result
+//			ResultSet rs = ps.executeQuery();
+//			while(rs.next()) {
+//				logsByEmployee.append(String.format("%s | %s | %s | %s %s %s | %s $%.2f %s%n", rs.getInt(1), rs.getTimestamp(2), rs.getString(3), rs.getInt(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getDouble(8), rs.getString(9)));
+//			}
+//			
+//			return logsByEmployee;
+//		}
+//	}
+	
+	public static List<ReimbursementRequest> selectLogsByEmployee(int employeeID) throws SQLException {
+		List<ReimbursementRequest> logsByEmployee = new ArrayList<>();
 		
 		String sqlSelect = "SELECT * FROM reimbursements_log WHERE employee_id = ? ORDER BY id";
 		
@@ -66,15 +106,36 @@ public class ReimbursementsLogDao {
 			//Put results  into ResultSet and grab first/only result
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()) {
-				logsByEmployee.append(String.format("%s | %s | %s | %s %s %s | %s $%.2f %s%n", rs.getInt(1), rs.getTimestamp(2), rs.getString(3), rs.getInt(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getDouble(8), rs.getString(9)));
+				logsByEmployee.add(new ReimbursementRequest(rs.getInt("id"), EmployeeDao.selectEmployeeById(rs.getInt("employee_id")), rs.getTimestamp("time_of_action"), ReimbursementCategory.valueOf(rs.getString("reimbursement_category")), ReimbursementStatus.valueOf(rs.getString("reimbursement_status")), rs.getDouble("amount"), rs.getString("action_details")));
 			}
-			
-			return logsByEmployee;
 		}
+		return logsByEmployee;
 	}
 	
-	public static StringBuilder selectPendingRequests() throws SQLException {
-		StringBuilder pendingRequests = new StringBuilder();
+	//Return StringBuilder
+//	public static StringBuilder selectPendingRequests() throws SQLException {
+//		StringBuilder pendingRequests = new StringBuilder();
+//		
+//		String sqlSelect = "SELECT * FROM reimbursements_log WHERE reimbursement_status = 'PENDING'";
+//		
+//		try (PreparedStatement ps = ConnectionFactory.getConnection().prepareStatement(sqlSelect)) {
+//			
+//			//Put results  into ResultSet and grab first/only result
+//			ResultSet rs = ps.executeQuery();
+//			while(rs.next()) {
+//				pendingRequests.append(String.format("(%s) | %s | Employee ID and name: %s %s %s | Request Info: %s $%.2f%n",
+//						rs.getInt("id"), rs.getTimestamp("time_of_action"),
+//						rs.getInt("employee_id"), rs.getString("employee_first_name"), rs.getString("employee_last_name"),
+//						rs.getString("reimbursement_category"), rs.getDouble("amount")));
+//			}
+//			
+//			return pendingRequests;
+//		}
+//	}
+	
+	//Return ReimbursementRequest object
+	public static List<ReimbursementRequest> selectPendingRequests() throws SQLException {
+		List<ReimbursementRequest> pendingRequests = new ArrayList<>();
 		
 		String sqlSelect = "SELECT * FROM reimbursements_log WHERE reimbursement_status = 'PENDING'";
 		
@@ -83,14 +144,10 @@ public class ReimbursementsLogDao {
 			//Put results  into ResultSet and grab first/only result
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()) {
-				pendingRequests.append(String.format("(%s) | %s | Employee ID and name: %s %s %s | Request Info: %s $%.2f%n",
-						rs.getInt("id"), rs.getTimestamp("time_of_action"),
-						rs.getInt("employee_id"), rs.getString("employee_first_name"), rs.getString("employee_last_name"),
-						rs.getString("reimbursement_category"), rs.getDouble("amount")));
+				pendingRequests.add(new ReimbursementRequest(rs.getInt("id"), EmployeeDao.selectEmployeeById(rs.getInt("employee_id")), rs.getTimestamp("time_of_action"), ReimbursementCategory.valueOf(rs.getString("reimbursement_category")), ReimbursementStatus.valueOf(rs.getString("reimbursement_status")), rs.getDouble("amount"), rs.getString("action_details")));
 			}
-			
-			return pendingRequests;
 		}
+		return pendingRequests;
 	}
 
 	public static void updateReimbursementStatus(int id, ReimbursementStatus status) throws SQLException {

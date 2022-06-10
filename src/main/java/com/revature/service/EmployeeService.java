@@ -3,6 +3,7 @@ package com.revature.service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
+import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
@@ -41,14 +42,26 @@ public class EmployeeService {
 		return BigDecimal.valueOf(r.getAmount()).setScale(2, RoundingMode.DOWN).doubleValue();
 	}
 
-	public static String displayPendingRequests() {
-		String s = "ERROR";
+	//Return as String
+//	public static String displayPendingRequests() {
+//		String s = "ERROR";
+//		try {
+//			s = ReimbursementsLogDao.selectPendingRequests().toString();
+//		} catch (SQLException ex) {
+//			ex.printStackTrace();
+//		}
+//		return s;
+//	}
+	
+	//Return as JSON
+	public static List<ReimbursementRequest> displayPendingRequests() {
+		List<ReimbursementRequest> r = null;
 		try {
-			s = ReimbursementsLogDao.selectPendingRequests().toString();
+			r = ReimbursementsLogDao.selectPendingRequests();
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
-		return s;
+		return r;
 	}
 
 	public static void approveOrDenyRequest(int id, ReimbursementStatus status) throws SQLException, StatusAlreadyUpdatedException {
@@ -62,24 +75,48 @@ public class EmployeeService {
 		}
 	}
 
-	public static String viewAllHistory() {
-		String s = "";
+	//Return as String
+//	public static String viewAllHistory() {
+//		String s = "";
+//		try {
+//			s = ReimbursementsLogDao.selectAllLogs().toString();
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//		return s;
+//	}
+	
+	//Return as JSON
+	public static List<ReimbursementRequest> viewAllHistory() {
+		List<ReimbursementRequest> r = null;
 		try {
-			s = ReimbursementsLogDao.selectAllLogs().toString();
-		} catch (SQLException e) {
-			e.printStackTrace();
+			r = ReimbursementsLogDao.selectAllLogs();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
 		}
-		return s;
+		return r;
 	}
 	
-	public static String viewEmployeeHistory(int id) {
-		String s = "";
+	//Return as String
+//	public static String viewEmployeeHistory(int id) {
+//		String s = "";
+//		try {
+//			s = ReimbursementsLogDao.selectLogsByEmployee(id).toString();
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//		return s;
+//	}
+	
+	//Return as JSON
+	public static List<ReimbursementRequest> viewEmployeeHistory(int id) {
+		List<ReimbursementRequest> r = null;
 		try {
-			s = ReimbursementsLogDao.selectLogsByEmployee(id).toString();
-		} catch (SQLException e) {
-			e.printStackTrace();
+			r = ReimbursementsLogDao.selectLogsByEmployee(id);
+		} catch (SQLException ex) {
+			ex.printStackTrace();
 		}
-		return s;
+		return r;
 	}
 	
 }
